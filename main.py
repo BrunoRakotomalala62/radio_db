@@ -130,35 +130,68 @@ PLAYER_HTML = '''
 '''
 
 RADIOS = {
-    "donbosco": {
-        "url": "https://radio.mg/don-bosco/",
-        "slug": "don-bosco",
-        "zeno_slug": "radio-don-bosco-madagascar",
-        "name": "Radio Don Bosco",
-        "frequency": "93.4 FM"
-    },
-    "alefamusic": {
-        "url": "https://radio.mg/alefamusic/",
-        "slug": "alefamusic",
-        "zeno_slug": None,
-        "name": "Alefa Music",
-        "frequency": None
-    },
-    "fahazavana": {
-        "url": "https://radio.mg/fahazavana/",
-        "slug": "fahazavana",
-        "zeno_slug": None,
-        "name": "Radio Fahazavana",
-        "frequency": None
-    },
-    "mariamadagascar": {
-        "url": "https://radio.mg/maria-madagascar/",
-        "slug": "maria-madagascar",
-        "zeno_slug": None,
-        "name": "Radio Maria Madagascar",
-        "frequency": None
-    }
+    "donbosco": {"url": "https://radio.mg/don-bosco/", "slug": "don-bosco", "name": "Radio Don Bosco", "frequency": "93.4 FM"},
+    "alefamusic": {"url": "https://radio.mg/alefamusic/", "slug": "alefamusic", "name": "Alefa Music", "frequency": None},
+    "fahazavana": {"url": "https://radio.mg/fahazavana/", "slug": "fahazavana", "name": "Radio Fahazavana", "frequency": None},
+    "mariamadagascar": {"url": "https://radio.mg/maria-madagascar/", "slug": "maria-madagascar", "name": "Radio Maria Madagascar", "frequency": None},
+    "alliance92": {"url": "https://radio.mg/alliance-92/", "slug": "alliance-92", "name": "Alliance 92", "frequency": "92 FM"},
+    "anikristy": {"url": "https://radio.mg/an-i-kristy/", "slug": "an-i-kristy", "name": "An'i Kristy", "frequency": None},
+    "dagosound": {"url": "https://radio.mg/dago-sound/", "slug": "dago-sound", "name": "Dago Sound", "frequency": None},
+    "fmfoi": {"url": "https://radio.mg/fmfoi/", "slug": "fmfoi", "name": "FM Foi", "frequency": None},
+    "freefm": {"url": "https://radio.mg/free-fm-104-2/", "slug": "free-fm-104-2", "name": "Free FM 104.2", "frequency": "104.2 FM"},
+    "hopefy": {"url": "https://radio.mg/hopefy/", "slug": "hopefy", "name": "Hopefy", "frequency": None},
+    "joyradioafrica": {"url": "https://radio.mg/joy-radio-africa/", "slug": "joy-radio-africa", "name": "Joy Radio Africa", "frequency": None},
+    "mbs": {"url": "https://radio.mg/mbs/", "slug": "mbs", "name": "MBS Radio", "frequency": None},
+    "netprotv": {"url": "https://radio.mg/netpro-tv/", "slug": "netpro-tv", "name": "NetPro.TV Radio", "frequency": None},
+    "olivasoa": {"url": "https://radio.mg/olivasoa/", "slug": "olivasoa", "name": "Olivasoa Radio", "frequency": None},
+    "anjomara": {"url": "https://radio.mg/radio-anjomara/", "slug": "radio-anjomara", "name": "Radio Anjomara", "frequency": None},
+    "bitsika": {"url": "https://radio.mg/bitsika/", "slug": "bitsika", "name": "Radio Bitsika", "frequency": None},
+    "fanambarana": {"url": "https://radio.mg/fanambarana/", "slug": "fanambarana", "name": "Radio Fanambarana", "frequency": None},
+    "feonny": {"url": "https://radio.mg/feon-ny/", "slug": "feon-ny", "name": "Radio Feon'ny", "frequency": None},
+    "fivoarana": {"url": "https://radio.mg/fivoarana/", "slug": "fivoarana", "name": "Radio Fivoarana", "frequency": None},
+    "mtv": {"url": "https://radio.mg/mtv/", "slug": "mtv", "name": "Radio MTV", "frequency": None},
+    "paradisagasy": {"url": "https://radio.mg/paradisagasy/", "slug": "paradisagasy", "name": "Radio Paradisagasy", "frequency": None},
+    "rmk": {"url": "https://radio.mg/madagasikara-hoan-i-kristy/", "slug": "madagasikara-hoan-i-kristy", "name": "Radio Madagasikara Hoan'i Kristy", "frequency": None},
+    "vaovaomahasoa": {"url": "https://radio.mg/vaovao-mahasoa/", "slug": "vaovao-mahasoa", "name": "Radio Vaovao Mahasoa", "frequency": None},
+    "vazogasy": {"url": "https://radio.mg/vazo-gasy/", "slug": "vazo-gasy", "name": "Radio Vazogasy", "frequency": None},
+    "rdj": {"url": "https://radio.mg/des-jeunes-fm/", "slug": "des-jeunes-fm", "name": "RDJ - Radio Des Jeunes", "frequency": None},
+    "rnasava102": {"url": "https://radio.mg/rna-sava102/", "slug": "rna-sava102", "name": "RNA Sava 102 FM", "frequency": "102 FM"},
+    "rna": {"url": "https://radio.mg/rna/", "slug": "rna", "name": "RNA Webradio", "frequency": None},
+    "siokafm": {"url": "https://radio.mg/sioka-fm-106/", "slug": "sioka-fm-106", "name": "Sioka FM 106", "frequency": "106 FM"},
+    "soaimadagasikara": {"url": "https://radio.mg/soa-i-madagasikara/", "slug": "soa-i-madagasikara", "name": "Soa i Madagasikara", "frequency": None},
+    "taratra": {"url": "https://radio.mg/taratra-105-6-fm/", "slug": "taratra-105-6-fm", "name": "Taratra 105.6 FM", "frequency": "105.6 FM"},
+    "tiakobe": {"url": "https://radio.mg/tiako-be/", "slug": "tiako-be", "name": "Tiako Be", "frequency": None},
+    "vahiniala": {"url": "https://radio.mg/vahiniala/", "slug": "vahiniala", "name": "Vahiniala", "frequency": None},
 }
+
+def scrape_all_radios_from_site():
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    }
+    try:
+        response = requests.get("https://radio.mg/", headers=headers, timeout=15)
+        soup = BeautifulSoup(response.text, 'lxml')
+        radios = []
+        links = soup.find_all('a', href=True)
+        seen = set()
+        for link in links:
+            href = link.get('href', '')
+            if 'radio.mg/' in href and not href.endswith('#') and 'gadona' not in href:
+                match = re.search(r'radio\.mg/([a-zA-Z0-9\-]+)/?$', href)
+                if match:
+                    slug = match.group(1)
+                    if slug not in seen and slug not in ['manifest.json', 'favorites', 'dmca', 'fitanana-ny-tsiambaratelo', 'hampiditra-ny-onjam-peonao', 'fanampiana', 'vao-nihaino', 'gadon-kira']:
+                        seen.add(slug)
+                        name = link.get_text(strip=True) or slug.replace('-', ' ').title()
+                        radios.append({
+                            "id": slug.replace('-', ''),
+                            "slug": slug,
+                            "name": name if name else slug.replace('-', ' ').title(),
+                            "url": f"https://radio.mg/{slug}/"
+                        })
+        return radios
+    except:
+        return []
 
 def get_stream_url_from_zeno(zeno_slug):
     if not zeno_slug:
@@ -286,10 +319,14 @@ def index():
         "message": "API Radio Madagascar",
         "description": "API pour ecouter les radios malgaches en ligne",
         "endpoints": {
-            "ecouter": "GET /ecouter?radio=<nom_radio>",
-            "radios": "GET /radios"
+            "ecouter": "GET /ecouter?radio=<nom_radio> - Obtenir les infos JSON d'une radio",
+            "radios": "GET /radios - Liste simple des radios",
+            "radios_all": "GET /radios/all - Liste complete avec stream_url (plus lent)",
+            "radios_scrape": "GET /radios/scrape - Scraper radio.mg en direct",
+            "player": "GET /player?radio=<nom_radio> - Lecteur audio HTML"
         },
         "radios_disponibles": list(RADIOS.keys()),
+        "total_radios": len(RADIOS),
         "exemple": "/ecouter?radio=donbosco"
     })
 
@@ -322,12 +359,36 @@ def liste_radios():
             "id": key,
             "nom": config.get("name"),
             "frequence": config.get("frequency"),
-            "url_api": f"/ecouter?radio={key}"
+            "url_site": config.get("url"),
+            "url_api": f"/ecouter?radio={key}",
+            "url_player": f"/player?radio={key}"
         })
     
     return jsonify({
         "radios_disponibles": radios_list,
         "total": len(RADIOS)
+    })
+
+@app.route('/radios/all')
+def liste_radios_complete():
+    radios_list = []
+    for key, config in RADIOS.items():
+        radio_info = scrape_radio_info(key)
+        if radio_info:
+            radios_list.append(radio_info)
+    
+    return jsonify({
+        "radios": radios_list,
+        "total": len(radios_list)
+    })
+
+@app.route('/radios/scrape')
+def scrape_radios_live():
+    radios = scrape_all_radios_from_site()
+    return jsonify({
+        "radios_trouvees": radios,
+        "total": len(radios),
+        "source": "https://radio.mg/"
     })
 
 @app.route('/player')
