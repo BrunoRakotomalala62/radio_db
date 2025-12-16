@@ -1,9 +1,133 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template_string
 import requests
 from bs4 import BeautifulSoup
 import re
 
 app = Flask(__name__)
+
+PLAYER_HTML = '''
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Don Bosco - Madagascar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .player-container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        .radio-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #e94560, #0f3460);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        .frequency { color: #e94560; font-size: 18px; margin-bottom: 20px; }
+        .status { 
+            display: inline-block;
+            padding: 5px 15px;
+            background: #27ae60;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+        .status.offline { background: #e74c3c; }
+        audio {
+            width: 100%;
+            margin: 20px 0;
+        }
+        .play-btn {
+            background: #e94560;
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .play-btn:hover { transform: scale(1.05); }
+        .play-btn:disabled { background: #666; cursor: not-allowed; }
+        .info { margin-top: 20px; font-size: 14px; opacity: 0.7; }
+        .radios-list {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .radios-list a {
+            display: block;
+            color: #e94560;
+            text-decoration: none;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <div class="radio-logo">{{ radio_emoji }}</div>
+        <h1>{{ nom }}</h1>
+        <p class="frequency">{{ frequence or 'FM Madagascar' }}</p>
+        <span class="status">EN DIRECT</span>
+        
+        <audio id="radioPlayer" controls>
+            <source src="{{ stream_url }}" type="audio/mpeg">
+            Votre navigateur ne supporte pas l'audio.
+        </audio>
+        
+        <button class="play-btn" onclick="togglePlay()">Ecouter</button>
+        
+        <p class="info">Cliquez sur le bouton ou utilisez les controles audio</p>
+        
+        <div class="radios-list">
+            <p style="opacity: 0.5; margin-bottom: 10px;">Autres radios:</p>
+            {% for r in autres_radios %}
+            <a href="/player?radio={{ r }}">{{ r|title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script>
+        const audio = document.getElementById('radioPlayer');
+        const btn = document.querySelector('.play-btn');
+        
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                btn.textContent = 'Pause';
+            } else {
+                audio.pause();
+                btn.textContent = 'Ecouter';
+            }
+        }
+        
+        audio.onplay = () => btn.textContent = 'Pause';
+        audio.onpause = () => btn.textContent = 'Ecouter';
+    </script>
+</body>
+</html>
+'''
 
 RADIOS = {
     "donbosco": {
@@ -205,6 +329,25 @@ def liste_radios():
         "radios_disponibles": radios_list,
         "total": len(RADIOS)
     })
+
+@app.route('/player')
+def player():
+    radio = request.args.get('radio', 'donbosco').lower().strip()
+    
+    if radio not in RADIOS:
+        radio = 'donbosco'
+    
+    radio_info = scrape_radio_info(radio)
+    
+    autres_radios = [k for k in RADIOS.keys() if k != radio]
+    
+    return render_template_string(PLAYER_HTML,
+        nom=radio_info.get('nom', 'Radio Madagascar'),
+        frequence=radio_info.get('frequence'),
+        stream_url=radio_info.get('stream_url'),
+        radio_emoji='📻',
+        autres_radios=autres_radios
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
