@@ -34,7 +34,7 @@ RADIOS = {
     "mtv": {"url": "https://radio.mg/mtv/", "slug": "mtv", "name": "Radio MTV", "frequency": None, "zeno_slug": "radio-mtv-madagascar", "stream_url": None},
     "paradisagasy": {"url": "https://radio.mg/paradisagasy/", "slug": "paradisagasy", "name": "Radio Paradisagasy", "frequency": None, "zeno_slug": "radio-paradisagasy", "stream_url": None},
     "rmk": {"url": "https://radio.mg/madagasikara-hoan-i-kristy/", "slug": "madagasikara-hoan-i-kristy", "name": "Radio Madagasikara Hoan'i Kristy", "frequency": None, "zeno_slug": "radio-madagasikara-hoan-i-kristy", "stream_url": None},
-    "vaovaomahasoa": {"url": "https://radio.mg/vaovao-mahasoa/", "slug": "vaovao-mahasoa", "name": "Radio Vaovao Mahasoa", "frequency": None, "zeno_slug": "radio-vaovao-mahasoa", "stream_url": None},
+    "vaovaomahasoa": {"url": "https://radio.mg/vaovao-mahasoa/", "slug": "vaovao-mahasoa", "name": "Radio Vaovao Mahasoa", "frequency": "106.8 FM", "zeno_slug": "radio-vaovao-mahasoa", "stream_url": "https://443-1.autopo.st/193/listen.mp3"},
     "vazogasy": {"url": "https://radio.mg/vazo-gasy/", "slug": "vazo-gasy", "name": "Radio Vazogasy", "frequency": None, "zeno_slug": "radio-vazo-gasy", "stream_url": None},
     "rnasava102": {"url": "https://radio.mg/rna-sava102/", "slug": "rna-sava102", "name": "RNA Sava 102 FM", "frequency": "102 FM", "zeno_slug": "rna-sava-102-fm", "stream_url": None},
     "siokafm": {"url": "https://radio.mg/sioka-fm-106/", "slug": "sioka-fm-106", "name": "Sioka FM 106", "frequency": "106 FM", "zeno_slug": "sioka-fm-106", "stream_url": None},
@@ -178,7 +178,7 @@ def scrape_radio_info(radio_key):
     if not stream_url and radio_config.get("zeno_slug"):
         stream_url = get_stream_url_from_zeno(radio_config["zeno_slug"])
     
-    statut = "en_ligne" if stream_url and stream_url.startswith("https://stream.") else "stream_indisponible"
+    statut = "en_ligne" if stream_url and (stream_url.startswith("https://stream.") or (stream_url.startswith("https://") and ".mp3" in stream_url)) else "stream_indisponible"
     instructions = "Utilisez l'URL stream_url pour ecouter la radio en direct dans un lecteur audio"
     
     if not stream_url:
